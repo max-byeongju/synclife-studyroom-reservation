@@ -51,7 +51,7 @@ public class RoomService {
 
     public List<RoomAvailabilityResponseDto> getRoomsAvailability(LocalDate date) {
         List<Room> allRooms = roomRepository.findAll();
-        List<Reservation> reservationsOnDate = reservationRepository.findByDateNative(date); // 네이티브 쿼리 사용
+        List<Reservation> reservationsOnDate = reservationRepository.findByDate(date); // 네이티브 쿼리 사용
 
         Map<Long, List<Reservation>> reservationsByRoomId = new HashMap<>();
         for (Reservation reservation : reservationsOnDate) {
