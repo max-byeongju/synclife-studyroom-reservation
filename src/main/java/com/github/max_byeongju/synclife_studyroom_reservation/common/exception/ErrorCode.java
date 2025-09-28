@@ -11,6 +11,9 @@ public enum ErrorCode {
     // 400 BAD_REQUEST
     INVALID_RESERVATION_TIME(HttpStatus.BAD_REQUEST, "예약 시작 시간은 종료 시간보다 빨라야 합니다."),
 
+    // 401 UNAUTHORIZED
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
+
     // 403 FORBIDDEN
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "요청에 대한 권한이 없습니다."),
 
