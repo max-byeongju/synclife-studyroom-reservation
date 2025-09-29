@@ -6,13 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    @Query(value = "SELECT * FROM reservation " +
-            "WHERE DATE(lower(reservation_time)) = :date " +
-            "ORDER BY room_id, lower(reservation_time)",
+    @Query(value = "SELECT * FROM reservation r " +
+            "WHERE r.reservation_time && tsrange(:startOfDay, :endOfDay, '[)') " +
+            "ORDER BY r.room_id, lower(r.reservation_time)",
             nativeQuery = true)
-    List<Reservation> findByDate(@Param("date") LocalDate date);
+    List<Reservation> findByDate(@Param("startOfDay") LocalDateTime startOfDay,
+                                 @Param("endOfDay") LocalDateTime endOfDay);
 }

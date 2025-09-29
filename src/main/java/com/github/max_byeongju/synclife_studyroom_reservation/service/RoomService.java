@@ -51,7 +51,9 @@ public class RoomService {
 
     public List<RoomAvailabilityResponseDto> getRoomsAvailability(LocalDate date) {
         List<Room> allRooms = roomRepository.findAll();
-        List<Reservation> reservationsOnDate = reservationRepository.findByDate(date); // 네이티브 쿼리 사용
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
+        List<Reservation> reservationsOnDate = reservationRepository.findByDate(startOfDay, endOfDay); // 네이티브 쿼리 사용
 
         Map<Long, List<Reservation>> reservationsByRoomId = new HashMap<>();
         for (Reservation reservation : reservationsOnDate) {
@@ -65,9 +67,6 @@ public class RoomService {
             List<Reservation> roomReservations = reservationsByRoomId.getOrDefault(room.getId(), Collections.emptyList());
 
             roomReservations.sort(Comparator.comparing(r -> r.getReservationTime().lower()));
-
-            LocalDateTime startOfDay = date.atStartOfDay();
-            LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
             List<TimeSlotDto> availableSlots = calculateAvailableSlots(roomReservations, startOfDay, endOfDay);
 
             RoomAvailabilityResponseDto dto = RoomAvailabilityResponseDto.of(room, roomReservations, availableSlots);
